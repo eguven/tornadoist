@@ -13,6 +13,7 @@ HowTO
 Using ``tornado.gen`` ::
 
     from tornado import web, gen
+    from tcelerymixin import CeleryMixin
 
     class CeleryHandler(tornado.web.RequestHandler, CeleryMixin):
         @web.asynchronous
