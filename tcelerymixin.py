@@ -55,6 +55,18 @@ class CeleryMixin(object):
             def _on_result(self, result):
                 do_something_with_result(result)
                 self.finish()
+
+    Using `tornado.gen`
+
+        class CeleryHandler(tornado.web.RequestHandler, CeleryMixin):
+            @tornado.web.asynchronous
+            @tornado.gen.engine
+            def get(self):
+                Task = tornado.gen.Task
+                result = yield Task(self.add_task, some_task, 'argx')
+                self.write('Hello %s World!' % result)
+                self.finish()
+
     """
 
     def add_task(self, taskname, *args, **kwargs):
