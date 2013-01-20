@@ -22,7 +22,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-"""Demo app with CeleryMixin"""
+"""Demo app with CeleryMixin with Celery on MongoDB as broker and results
+backend"""
 
 import logging
 import os.path
@@ -33,16 +34,19 @@ import tornado.ioloop
 import tornado.options
 import tornado.web
 from tornado.options import define, options
-from celery import Celery
 
-from tcelerymixin import CeleryMixin
+from tornadoist import CeleryMixin
 
-# MongoDB Broker & Backend
-celery = Celery('app', broker='mongodb://', backend='mongodb://')
+try:
+    from celery import Celery
+    # MongoDB Broker & Backend
+    celery = Celery('app', broker='mongodb://', backend='mongodb://') 
 
-@celery.task
-def echo(i):
-    return i
+    @celery.task
+    def echo(i):
+        return i
+except ImportError:
+    pass
 
 class CeleryHandler(tornado.web.RequestHandler, CeleryMixin):
     @tornado.web.asynchronous
@@ -62,7 +66,7 @@ class CeleryHandler(tornado.web.RequestHandler, CeleryMixin):
 #        self.finish()
 
 app_handlers = [
-                (r"/", CeleryHandler),
+                (r"/celery", CeleryHandler),
     ]
 
 settings = dict(

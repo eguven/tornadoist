@@ -29,8 +29,8 @@ import os
 import socket
 from uuid import uuid4
 
-from celery import task
 import tornado.ioloop
+from celery import task
 
 __author__ = """Eren Güven <erenguven0@gmail.com>"""
 

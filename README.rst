@@ -1,19 +1,25 @@
 ============
-tcelerymixin
+tornadoist
 ============
 
-**tcelerymixin** is a Mixin class to use with ``tornado.web.RequestHandler``
+**tornadoist** -currently- provides Mixins to execute code outside
+``tornado.ioloop.IOLoop`` to avoid blocking.
+
+Demo app included. (Celery with ``mongodb://`` preconfigured in demo app)
+
+CeleryMixin
+-----------
+
+**CeleryMixin** is a Mixin class to use with ``tornado.web.RequestHandler``
 that provides a Tornado-like interface to running Celery tasks on TornadoServer.
 
-Demo app included.
-
 HowTO
------
+`````
 
 Using ``tornado.gen`` ::
 
     from tornado import web, gen
-    from tcelerymixin import CeleryMixin
+    from tornadoist import CeleryMixin
 
     class CeleryHandler(tornado.web.RequestHandler, CeleryMixin):
         @web.asynchronous
