@@ -3,7 +3,12 @@ tornadoist
 ============
 
 **tornadoist** -currently- provides Mixins to execute code outside
-``tornado.ioloop.IOLoop`` to avoid blocking.
+``tornado.ioloop.IOLoop`` to avoid blocking. These are:
+
+- CeleryMixin: Celery Tasks
+- ProcessMixin: Functions in separate process
+
+Both support results, avoids polling or timeouts. More info below.
 
 Demo app included. (Celery with ``mongodb://`` preconfigured in demo app)
 
@@ -40,3 +45,24 @@ Or using explicit callback ::
             do_something_with_result(result)
             self.finish()
 
+ProcessMixin
+-----------
+
+**ProcessMixin** is a Mixin class to use with ``tornado.web.RequestHandler``
+that provides a Tornado-like interface to running functions with
+``multiprocessing.Process`` outside IOLoop.
+
+HowTO
+`````
+
+    from tornado import web, gen
+    from tornadoist import ProcessMixin
+
+    class ProcessHandler(tornado.web.RequestHandler, ProcessMixin):
+        @tornado.web.asynchronous
+        @tornado.gen.engine
+        def get(self):
+            result = yield tornado.gen.Task(self.add_task, my_blocking_function,
+                                            'somearg', some_kwarg=42)
+            self.write('Hello Process World! %s' % result)
+            self.finish()
