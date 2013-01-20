@@ -55,6 +55,8 @@ that provides a Tornado-like interface to running functions with
 HowTO
 `````
 
+Using ``tornado.gen`` ::
+
     from tornado import web, gen
     from tornadoist import ProcessMixin
 
