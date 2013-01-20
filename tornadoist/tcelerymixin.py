@@ -70,7 +70,7 @@ class CeleryMixin(object):
     """
 
     def add_task(self, taskname, *args, **kwargs):
-        """Run a Celery task. All args and kwargs except callable are
+        """Run a Celery task. All args and kwargs except `callback` are
         passed to task.
 
         :param taskname: celery task
