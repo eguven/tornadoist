@@ -27,6 +27,7 @@ backend"""
 
 import logging
 import os.path
+import time
 
 import tornado.gen
 import tornado.httpserver
@@ -35,7 +36,7 @@ import tornado.options
 import tornado.web
 from tornado.options import define, options
 
-from tornadoist import CeleryMixin
+from tornadoist import CeleryMixin, ProcessMixin
 
 try:
     from celery import Celery
@@ -65,8 +66,25 @@ class CeleryHandler(tornado.web.RequestHandler, CeleryMixin):
 #        self.write('Hello %s World!' % result)
 #        self.finish()
 
+class ProcessHandler(tornado.web.RequestHandler, ProcessMixin):
+    def sleeper(self, n):
+        time.sleep(n)
+        return 'I just <b>time.sleep</b>d for %s seconds, outside IOLoop' % n
+
+    @tornado.web.asynchronous
+    @tornado.gen.engine
+    def get(self):
+        if not self.get_argument("t",""):
+            self.redirect(self.request.path + "?t=3.2")
+            return
+        result = yield tornado.gen.Task(self.add_task, self.sleeper,
+                                        float(self.get_argument("t")))
+        self.write('Hello Process World! %s' % result)
+        self.finish()
+
 app_handlers = [
                 (r"/celery", CeleryHandler),
+                (r"/process", ProcessHandler),
     ]
 
 settings = dict(

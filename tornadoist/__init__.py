@@ -21,6 +21,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from tprocessmixin import ProcessMixin
+
 try:
     from tcelerymixin import CeleryMixin
 except ImportError: # celery not installed, redefine dummy CeleryMixin
@@ -30,4 +32,4 @@ except ImportError: # celery not installed, redefine dummy CeleryMixin
             """Raise `NotImplementedError`"""
             raise NotImplementedError(msg)
 
-__all__ = ['CeleryMixin']
+__all__ = ['CeleryMixin','ProcessMixin']
