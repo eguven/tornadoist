@@ -60,8 +60,6 @@ class ProcessMixin(object):
     """Mixin class to run tasks in :class:`~multiprocessing.Process`
     asynchronously.
 
-TODO: docstrings!
-
         class ProcessHandler(tornado.web.RequestHandler, ProcessMixin):
             @tornado.web.asynchronous
             def get(self):
@@ -73,7 +71,7 @@ TODO: docstrings!
 
     Using `tornado.gen`
 
-        class CeleryHandler(tornado.web.RequestHandler, ProcessMixin):
+        class ProcessHandler(tornado.web.RequestHandler, ProcessMixin):
             @tornado.web.asynchronous
             @tornado.gen.engine
             def get(self):
@@ -88,15 +86,15 @@ TODO: docstrings!
         """Run a function in a Process. All args and kwargs except
         `callback` are passed to task.
 
-        :param taskname: celery task
+        :param taskname: a `callable`
         :keyword callback: callable with a single argument (task result)
 
         This method creates a random UnixSocket under /tmp/ for
         communication, registers a handler on `tornado.ioloop.IOLoop`
-        with its fd, calls `taskname.apply_async(args, kwargs)` and
-        links to notifier subtask to be run upon successful completion.
-
-        :attr:`celery_result` contains return value of apply_async
+        with its fd, creates a `Pipe` for communicating back the
+        result and runs `taskname` using `run_as_process`. Which runs
+        the given task, sends result back through and connects to the
+        UnixSocket to let IOLoop know
         """
         user_cb = kwargs.pop('callback')
         assert callable(user_cb)

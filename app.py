@@ -82,9 +82,14 @@ class ProcessHandler(tornado.web.RequestHandler, ProcessMixin):
         self.write('Hello Process World! %s' % result)
         self.finish()
 
+class IndexHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write("<pre>Use: /celery (if Celery is running)<br>     /process</pre>")
+
 app_handlers = [
                 (r"/celery", CeleryHandler),
                 (r"/process", ProcessHandler),
+                (r"/", IndexHandler),
     ]
 
 settings = dict(
