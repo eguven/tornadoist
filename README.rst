@@ -46,7 +46,7 @@ Or using explicit callback ::
             self.finish()
 
 ProcessMixin
------------
+------------
 
 **ProcessMixin** is a Mixin class to use with ``tornado.web.RequestHandler``
 that provides a Tornado-like interface to running functions with
@@ -68,3 +68,8 @@ Using ``tornado.gen`` ::
                                             'somearg', some_kwarg=42)
             self.write('Hello Process World! %s' % result)
             self.finish()
+
+License
+^^^^^^^
+
+`Apache License, Version 2.0 <http://www.apache.org/licenses/LICENSE-2.0.html>`_
